@@ -8,7 +8,7 @@ class DVD{
 	
 	function __construct($id=0){
 		$this->_id = $id;
-		$this->_db = new DB();
+		$this->_db = new DB::getInstance();
 	}
 	
 	public function setTitle($title){

@@ -2,8 +2,19 @@
 class DB{
 	const DB_NAME = 'dvd.db';
 	protected $_db;
-	function __construct(){
+	protected static $_instance;
+	protected function __construct(){
 		$this->_db = new SQLite3(self::DB_NAME);
+	}
+	protected function __clone(){}
+	public static function getInstance(){
+		if (!self::$_instance instanceof self){
+			//не €вл€етс€ екземпл€ром самого себ€
+			self::$_instance == new self; 
+			/*it's the same new DB, but now we can rename name class whenever*/
+			return self::$_instance;
+			//classic Singelton
+		}
 	}
 	function __destruct(){
 		unset($this->_db);
