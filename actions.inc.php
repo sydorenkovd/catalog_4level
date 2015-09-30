@@ -9,8 +9,10 @@ switch($_POST['action']){
 		break;
 	case 'anthology':
 		$band = trim(strip_tags($_POST['band']));
+		$type = (int)($_POST['bonus']) ? 'bonus' : '';
 		$tracks = array_map(function($val){return (int)$val;}, $_POST['order']);
-		$dvd = new DVD();
+		// $dvd = new DVD();
+		$dvd = DVDFactory::create($type);
 		$dvd->setBand($band);
 		foreach ($tracks as $track) {
 			$dvd->addTrack($track);
