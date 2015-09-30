@@ -54,7 +54,34 @@ class DVD{
 			return 'Не срослось';
 	}
 	/* Сохранение информации об альбоме в формате XML */
-	public function getXML($id){
+	// public function getXML($id){
+		
+	// }
+	
+	/* Записываем коллекцию треков в файл. Просто для демонстрации */
+	function __destruct(){
+		if($this->_tracks){
+			file_put_contents(__DIR__.'\tracks.log', time().'|'.serialize($this->_tracks)."\n", FILE_APPEND);
+		}
+	}
+}
+class DVDStrategy{
+	protected $_strategy;
+	function get(){
+return $this->_strategy->get();
+	}
+	function setStrategy($obj){
+$this->_strategy = $obj;
+	}
+	function __call($method, $args){
+$this->_strategy->method[$args[0]];
+	}
+}
+interface DVDFormat{
+	function get();	
+}
+class DVDAsXML extends DVD implements DVDFormat{
+	function get(){
 		$doc = new DomDocument('1.0', 'utf-8');
 		$doc->formatOutput = true;
 		$doc->preserveWhiteSpace = false;
@@ -75,14 +102,12 @@ class DVD{
 		$file_name = $this->_band.'-'.$this->_title.'.xml';
 		file_put_contents('output/'.$file_name, $doc->saveXML());
 	}
-	
-	/* Записываем коллекцию треков в файл. Просто для демонстрации */
-	function __destruct(){
-		if($this->_tracks){
-			file_put_contents(__DIR__.'\tracks.log', time().'|'.serialize($this->_tracks)."\n", FILE_APPEND);
-		}
-	}
 }
+class DVDAsJSON extends DVD implements DVDFormat{
+	function get(){
+		file_put_contents('output/'.$file_name, json_encode($doc));
+	}
+	}
 class BonusDVD extends DVD{
 	function __construct($id=0){
 		parent::__construct();

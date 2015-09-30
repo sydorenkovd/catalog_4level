@@ -20,12 +20,19 @@ switch($_POST['action']){
 		break;
 	case 'list':
 		$id = abs((int)$_POST['id']);
+		$type = (int)$_POST['format'];
 		$band = trim(strip_tags($_POST['band']));
 		$title = trim(strip_tags($_POST['title']));
-		$dvd = new DVD();
+		// $dvd = new DVD();
+		$dvd = new DVDStrategy();
+		if($type)
+			$dvd->setStrategy(new DVDAsJSON($id));
+		else
+			$dvd->setStrategy(new DVDAsXML($id));
 		$dvd->setTitle($title);
 		$dvd->setBand($band);
-		$dvd->getXML($id);
+		// $dvd->getXML($id);
+		$dvd->get();
 		break;
 }
 header('Location: catalog.php');
